@@ -1,0 +1,103 @@
+# RentGenius Agent #3 - Security & Environment Files
+
+# API Keys and Credentials
+credentials.json
+token.json
+client_secret*.json
+*.pem
+*.p12
+
+# Environment Variables
+.env
+.env.local
+.env.production
+.env.staging
+config.ini
+secrets.ini
+
+# API Keys in any format
+*api_key*
+*API_KEY*
+*secret*
+*SECRET*
+*password*
+*PASSWORD*
+*token*
+*TOKEN*
+
+# Email Credentials
+email_config.json
+smtp_config.json
+
+# Database Connections
+database.ini
+db_config.json
+connection_string.txt
+
+# TiDB Connection Strings
+tidb_connection.txt
+tidb.env
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+agent3_env/
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary Files
+*.log
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Mock Data (if contains real addresses/contacts)
+mock_scenarios.json
+test_data_real.json
+
+# Demo Output Files
+coordination_results.json
+test_results.json
