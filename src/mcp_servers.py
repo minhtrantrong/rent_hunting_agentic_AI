@@ -410,7 +410,7 @@ class CommunicationMCPServer(MCPServer):
         # Send via email tool
         email_params = {
             "to_email": user_profile.get("email"),
-            "subject": f"🏠 RentGenius MCP Coordination - {len(viewing_schedule)} Viewings Scheduled",
+            "subject": f"🏠 Your {len(viewing_schedule)} Apartment Viewings Are Ready!",
             "message": email_content,
             "is_html": True
         }
@@ -449,7 +449,7 @@ class CommunicationMCPServer(MCPServer):
             }
     
     def _generate_coordination_email(self, user_profile: Dict, viewing_schedule: List, insights: Dict) -> str:
-        """Generate comprehensive coordination email with MCP branding"""
+        """Generate clean, user-friendly coordination email with enhanced integrations"""
         
         user_name = user_profile.get("name", "Valued Client")
         total_viewings = len(viewing_schedule)
@@ -460,70 +460,169 @@ class CommunicationMCPServer(MCPServer):
 <head>
     <style>
         body {{ font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; }}
-        .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }}
-        .mcp-badge {{ background-color: #ff6b6b; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; margin: 10px 0; }}
-        .viewing {{ background-color: #ffffff; margin: 20px 0; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
-        .mcp-architecture {{ background-color: #e8f4fd; padding: 15px; border-radius: 8px; margin: 20px 0; }}
+        .header {{ background: linear-gradient(135deg, #2E8B57 0%, #20B2AA 100%); color: white; padding: 30px; text-align: center; }}
+        .subtitle {{ background-color: #f0f8f0; color: #2E8B57; padding: 8px 20px; border-radius: 20px; font-size: 14px; margin: 10px 0; display: inline-block; }}
+        .viewing {{ background-color: #ffffff; margin: 20px 0; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #2E8B57; }}
+        .intro-section {{ background-color: #f8fffe; padding: 20px; border-radius: 8px; margin: 20px 0; }}
+        .contact-section {{ background-color: #f8f9fa; padding: 20px; border-radius: 12px; margin: 15px 0; border-left: 4px solid #28a745; }}
+        .action-buttons {{ text-align: center; margin: 20px 0; }}
+        .btn {{ display: inline-block; padding: 12px 24px; margin: 8px; text-decoration: none; border-radius: 25px; font-weight: bold; transition: all 0.3s ease; }}
+        .btn-maps {{ background-color: #4285F4; color: white; }}
+        .btn-calendar {{ background-color: #EA4335; color: white; }}
+        .btn-whatsapp {{ background-color: #25D366; color: white; }}
+        .btn:hover {{ transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }}
+        .integration-highlight {{ background: linear-gradient(45deg, #25D366, #4285F4, #EA4335); padding: 2px; border-radius: 8px; }}
+        .integration-content {{ background: white; padding: 15px; border-radius: 6px; }}
+        .summary-stats {{ background-color: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center; }}
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🏠 RentGenius MCP Multi-Agent Coordination</h1>
-        <div class="mcp-badge">MODEL CONTEXT PROTOCOL ARCHITECTURE</div>
-        <p>Advanced multi-agent apartment hunting coordination</p>
+        <h1>🏠 RentGenius Apartment Coordination</h1>
+        <div class="subtitle">Your Personal Apartment Hunting Assistant</div>
+        <p>Smart apartment hunting made simple</p>
     </div>
     
     <div style="padding: 25px;">
-        <div class="mcp-architecture">
-            <h4>🔧 MCP Architecture in Action</h4>
-            <p>This coordination used our Model Context Protocol (MCP) servers:</p>
-            <ul>
-                <li>📅 <strong>Calendar MCP Server</strong>: Managed real Google Calendar integration</li>
-                <li>📧 <strong>Communication MCP Server</strong>: Handled professional email automation</li>
-                <li>🗺️ <strong>Maps MCP Server</strong>: Provided route optimization and directions</li>
-                <li>🤖 <strong>Agent #3 Coordinator</strong>: Orchestrated multi-agent intelligence</li>
-            </ul>
+        <div class="intro-section">
+            <h4>✨ What We Do</h4>
+            <p>RentGenius analyzes hundreds of properties and market data to find you the perfect apartment. Our AI-powered system considers your budget, preferences, and lifestyle to coordinate the best viewings for you.</p>
         </div>
         
         <h2>Hi {user_name}! 👋</h2>
-        <p>Our MCP-powered multi-agent system has successfully coordinated <strong>{total_viewings} apartment viewings</strong> using advanced AI coordination.</p>
+        <p>Great news! We've successfully coordinated <strong>{total_viewings} apartment viewings</strong> that match your criteria perfectly. Each property has been carefully selected based on your preferences and market analysis.</p>
         
-        <h3>📅 Your MCP-Coordinated Schedule:</h3>
+        <h3>📅 Your Personalized Viewing Schedule:</h3>
         """
         
-        # Add each viewing
+        # Add each viewing with enhanced integration features
         for i, viewing in enumerate(viewing_schedule, 1):
             property_info = viewing.get("property", {})
             time_info = viewing.get("time_slot", {})
             score = viewing.get("coordination_score", "N/A")
             
+            # Extract property details for integrations
+            property_address = property_info.get('address', 'Address TBD')
+            property_name = property_info.get('name', 'Property')
+            property_price = property_info.get('price', 'Price TBD')
+            
+            # Agent contact information from Agent #1 and #2 data
+            agent_name = property_info.get('agent_name', 'Property Agent')
+            agent_phone = property_info.get('agent_contact', {}).get('phone', '')
+            agent_email = property_info.get('agent_contact', {}).get('email', '')
+            
             # Format viewing time
             if isinstance(time_info, dict) and "start" in time_info:
                 start_time = datetime.fromisoformat(time_info["start"])
                 formatted_time = start_time.strftime('%A, %B %d at %I:%M %p')
+                # Create calendar event details
+                calendar_start = start_time.strftime('%Y%m%dT%H%M%S')
+                calendar_end = (start_time.replace(hour=start_time.hour+2)).strftime('%Y%m%dT%H%M%S')  # 2 hour duration
             else:
                 formatted_time = "Time TBD"
+                calendar_start = ""
+                calendar_end = ""
+            
+            # Generate Google Maps URL
+            maps_view_url = f"https://maps.google.com/?q={property_address.replace(' ', '+')}"
+            
+            # Generate Google Calendar add event URL
+            calendar_title = f"Property Viewing: {property_name}"
+            calendar_description = f"Property viewing at {property_address}. Price: {property_price}. Agent: {agent_name}"
+            calendar_url = f"https://calendar.google.com/calendar/render?action=TEMPLATE&text={calendar_title.replace(' ', '%20')}&dates={calendar_start}/{calendar_end}&details={calendar_description.replace(' ', '%20')}&location={property_address.replace(' ', '%20')}"
+            
+            # Generate WhatsApp contact URL
+            whatsapp_message = f"Hi {agent_name}, I'm interested in viewing the property at {property_address} on {formatted_time}. Could you please confirm availability?"
+            whatsapp_url = f"https://wa.me/{agent_phone.replace('+', '').replace('-', '').replace(' ', '')}?text={whatsapp_message.replace(' ', '%20')}" if agent_phone else "#"
             
             html_content += f"""
         <div class="viewing">
-            <h4>🏢 Viewing #{i}: {property_info.get('name', 'Property')} (MCP Score: {score}/100)</h4>
+            <h4>🏢 Viewing #{i}: {property_name}</h4>
+            <div class="summary-stats">
+                <strong>Match Score: {score}/100</strong> - This property is an excellent match for your criteria!
+            </div>
             <p><strong>📅 When:</strong> {formatted_time}<br>
-            <strong>📍 Where:</strong> {property_info.get('address', 'Address TBD')}<br>
-            <strong>💰 Price:</strong> {property_info.get('price', 'Price TBD')}</p>
-            <p><strong>🗺️ Navigation:</strong> 
-            <a href="https://maps.google.com/?q={property_info.get('address', '').replace(' ', '+')}" style="color: #4285F4;">View on Google Maps</a></p>
-        </div>
+            <strong>📍 Where:</strong> {property_address}<br>
+            <strong>💰 Price:</strong> {property_price}</p>
+            
+            <div class="integration-highlight">
+                <div class="integration-content">
+                    <h5>🚀 Quick Actions</h5>
+                    <div class="action-buttons">
+                        <a href="{maps_view_url}" target="_blank" class="btn btn-maps">
+                            🗺️ View on Maps
+                        </a>
+                        <a href="{calendar_url}" target="_blank" class="btn btn-calendar">
+                            📅 Add to Calendar
+                        </a>"""
+            
+            if agent_phone and whatsapp_url != "#":
+                html_content += f"""
+                        <a href="{whatsapp_url}" target="_blank" class="btn btn-whatsapp">
+                            📱 Message Agent
+                        </a>"""
+            
+            html_content += """
+                    </div>
+                </div>
+            </div>
             """
+            
+            # Add contact information section if available
+            if agent_name != 'Property Agent' or agent_phone or agent_email:
+                html_content += f"""
+            <div class="contact-section">
+                <h5>👤 Property Agent Contact</h5>
+                <p><strong>Agent:</strong> {agent_name}<br>"""
+                
+                if agent_phone:
+                    html_content += f"<strong>📞 Phone:</strong> <a href='tel:{agent_phone}'>{agent_phone}</a><br>"
+                if agent_email:
+                    html_content += f"<strong>📧 Email:</strong> <a href='mailto:{agent_email}'>{agent_email}</a><br>"
+                
+                html_content += "</p></div>"
+            
+            html_content += "</div>"
         
         html_content += f"""
-        <div style="background-color: #f5f5f5; padding: 25px; text-align: center; margin-top: 30px;">
-            <h3>🚀 MCP Architecture Success!</h3>
-            <p>✅ Model Context Protocol coordination<br>
-            ✅ Standardized API integrations<br>
-            ✅ Multi-agent intelligence processing<br>
-            ✅ Production-ready architecture</p>
-            <p><em>Powered by <strong>RentGenius MCP Multi-Agent System</strong><br>
-            TiDB Hackathon 2025 • Advanced AI Coordination</em></p>
+        <div class="integration-highlight" style="margin-top: 30px;">
+            <div class="integration-content">
+                <h3>🎯 Smart Features for Easy Apartment Hunting</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+                    <div>
+                        <h4>🗺️ Maps & Location</h4>
+                        <p>• View property locations and neighborhoods<br>
+                        • Explore nearby amenities and attractions<br>
+                        • Get directions directly from Google Maps</p>
+                    </div>
+                    <div>
+                        <h4>📅 Calendar Integration</h4>
+                        <p>• Add viewings to your calendar instantly<br>
+                        • Get automatic reminders and notifications<br>
+                        • Never miss an important appointment</p>
+                    </div>
+                    <div>
+                        <h4>📱 Instant Communication</h4>
+                        <p>• Message agents directly via WhatsApp<br>
+                        • Pre-written messages save you time<br>
+                        • Get quick responses from property managers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="background-color: #f5f5f5; padding: 25px; text-align: center; margin-top: 30px; border-radius: 8px;">
+            <h3>🏡 Happy Apartment Hunting!</h3>
+            <p>✅ Personalized property selection<br>
+            ✅ Smart scheduling and coordination<br>
+            ✅ Seamless integration with your favorite apps<br>
+            ✅ Direct communication with property agents<br>
+            ✅ All the tools you need in one place</p>
+            
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 14px; color: #666;">
+                <p>Questions? Need to reschedule? Just reply to this email and we'll help you coordinate any changes.</p>
+                <p><em>Powered by <strong>RentGenius</strong> • Your Personal Apartment Hunting Assistant</em></p>
+            </div>
         </div>
     </div>
 </body>

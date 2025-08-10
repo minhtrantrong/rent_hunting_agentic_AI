@@ -290,7 +290,14 @@ class TiDBSharedMemory:
         return [
             {
                 'property_id': 'mock_prop_001',
+                'name': 'The Independent',
                 'address': '2505 San Gabriel St, Austin, TX 78705',
+                'price': '$2,800/month',
+                'agent_name': 'Sarah Martinez',
+                'agent_contact': {
+                    'phone': '+15127891234',
+                    'email': 'sarah.martinez@theindependent.com'
+                },
                 'price_analysis': {
                     'monthly_rent': 2800,
                     'price_per_sqft': 3.2,
@@ -323,7 +330,14 @@ class TiDBSharedMemory:
             },
             {
                 'property_id': 'mock_prop_002',
+                'name': 'East Austin Loft',
                 'address': '2400 E 6th St, Austin, TX 78702',
+                'price': '$2,600/month',
+                'agent_name': 'Michael Chen',
+                'agent_contact': {
+                    'phone': '+15125551987',
+                    'email': 'michael.chen@eastaustinloft.com'
+                },
                 'price_analysis': {
                     'monthly_rent': 2600,
                     'price_per_sqft': 2.9,
@@ -351,6 +365,46 @@ class TiDBSharedMemory:
                     'overall_risk': 'low',
                     'market_volatility': 'moderate',
                     'location_stability': 'high'
+                },
+                'timestamp': datetime.now().isoformat()
+            },
+            {
+                'property_id': 'mock_prop_003',
+                'name': 'South Lamar Modern',
+                'address': '1900 S Lamar Blvd, Austin, TX 78704',
+                'price': '$3,200/month',
+                'agent_name': 'Jessica Williams',
+                'agent_contact': {
+                    'phone': '+15124567890',
+                    'email': 'j.williams@southlamarmodern.com'
+                },
+                'price_analysis': {
+                    'monthly_rent': 3200,
+                    'price_per_sqft': 3.5,
+                    'market_position': 'premium',
+                    'affordability_score': 6.8
+                },
+                'market_comparison': {
+                    'comparable_avg': 3150,
+                    'percentile_rank': 78,
+                    'trend': 'rising'
+                },
+                'property_features': {
+                    'bedrooms': 2,
+                    'bathrooms': 2,
+                    'sqft': 920,
+                    'amenities': ['pool', 'gym', 'concierge', 'rooftop_lounge'],
+                    'pet_friendly': True
+                },
+                'investment_metrics': {
+                    'roi_projection': 5.8,
+                    'appreciation_potential': 'high',
+                    'rental_demand': 'high'
+                },
+                'risk_assessment': {
+                    'overall_risk': 'low',
+                    'market_volatility': 'low',
+                    'location_stability': 'very_high'
                 },
                 'timestamp': datetime.now().isoformat()
             }

@@ -11,8 +11,9 @@ from typing import Dict, List, Any
 # Add src directory to Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-# Import secure configuration
-from secure_config import ensure_secure_environment
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv()
 
 try:
     from mcp_framework import MCPRegistry, MCPClient, setup_mcp_logging
@@ -29,10 +30,10 @@ class MCPTeamDemo:
     """
     
     def __init__(self):
-        # Ensure secure environment
-        if not ensure_secure_environment():
-            print("❌ Environment not configured - run setup_environment.py")
-            sys.exit(1)
+        # Check basic environment
+        if not os.getenv('EMAIL_ADDRESS'):
+            print("⚠️ No EMAIL_ADDRESS found - using demo mode")
+            os.environ['DEMO_MODE'] = 'true'
         
         # Setup MCP logging
         setup_mcp_logging("INFO")
@@ -191,6 +192,12 @@ class MCPTeamDemo:
                 "property_id": "mcp_prop_001",
                 "name": "The Independent",
                 "address": "2505 San Gabriel St, Austin, TX 78705",
+                "price": "$3,800/month",
+                "agent_name": "Sarah Martinez",
+                "agent_contact": {
+                    "phone": "+15127891234",
+                    "email": "sarah.martinez@theindependent.com"
+                },
                 "price_analysis": {
                     "monthly_rent": 3800,
                     "affordability_score": 8.2,
@@ -214,6 +221,12 @@ class MCPTeamDemo:
                 "property_id": "mcp_prop_002", 
                 "name": "East Austin Loft",
                 "address": "2400 E 6th St, Austin, TX 78702",
+                "price": "$3,200/month",
+                "agent_name": "Michael Chen",
+                "agent_contact": {
+                    "phone": "+15125551987",
+                    "email": "michael.chen@eastaustinloft.com"
+                },
                 "price_analysis": {
                     "monthly_rent": 3200,
                     "affordability_score": 8.8,
@@ -236,7 +249,13 @@ class MCPTeamDemo:
             {
                 "property_id": "mcp_prop_003",
                 "name": "South Lamar Modern",
-                "address": "1900 S Lamar Blvd, Austin, TX 78704", 
+                "address": "1900 S Lamar Blvd, Austin, TX 78704",
+                "price": "$4,100/month",
+                "agent_name": "Jessica Williams",
+                "agent_contact": {
+                    "phone": "+15124567890",
+                    "email": "j.williams@southlamarmodern.com"
+                },
                 "price_analysis": {
                     "monthly_rent": 4100,
                     "affordability_score": 7.5,
