@@ -10,6 +10,9 @@ load_dotenv()
 
 # The database connection function now reads from the loaded environment variables
 def get_tidb_connection():
+    """
+    Establishes a connection to the TiDB database using environment variables.
+    """
     return mysql.connector.connect(
         host=os.getenv("TIDB_HOST"),
         user=os.getenv("TIDB_USER"),
@@ -21,7 +24,7 @@ def get_tidb_connection():
 @tool
 def query_apartments(state: str, price_limit: int) -> str:
     """
-    Queries the apartments table to find apartments that match the criteria.
+    Securely queries the apartments table for apartments in a given state below a price limit.
     Args:
         state: The state where the apartment is located.
         price_limit: The maximum price of the apartment.
@@ -29,23 +32,20 @@ def query_apartments(state: str, price_limit: int) -> str:
         A string with the matching apartment records.
     """
     try:
-        conn = get_tidb_connection()
-        cursor = conn.cursor(dictionary=True)
-        query = f"SELECT * FROM rent WHERE State = '{state}' AND low_price < {price_limit}"
-        cursor.execute(query)
-        results = cursor.fetchall()
-        
-        if not results:
-            return "No apartments found matching the criteria."
-            
-        output = []
-        for row in results:
-            output.append(f"State: {row['state']}, Name: {row['name']}, Address: {row['address']}, Price: {row['price']}, Beds: {row['bed_info']}")
-        
-        cursor.close()
-        conn.close()
-        return "\n".join(output)
-
+        with get_tidb_connection() as conn:
+            with conn.cursor(dictionary=True) as cursor:
+                query = "SELECT * FROM apartments WHERE state = %s AND price < %s"
+                cursor.execute(query, (state, price_limit))
+                results = cursor.fetchall()
+                if not results:
+                    return "No apartments found matching the criteria."
+                output = []
+                for row in results:
+                    output.append(
+                        f"State: {row.get('state', '')}, Name: {row.get('name', '')}, "
+                        f"Address: {row.get('address', '')}, Price: {row.get('price', '')}, Beds: {row.get('bed_info', '')}"
+                    )
+                return "\n".join(output)
     except Exception as e:
         return f"An error occurred: {e}"
 
@@ -60,8 +60,8 @@ agent = Agent(
     show_tool_calls=True
 )
 
-# User message and execution
-user_message = "I would like to find an apartment in Florida with the price less than $1500"
-response = agent.run(user_message)
-
-print(response)
+# Example user message and execution
+if __name__ == "__main__":
+    user_message = "I would like to find an apartment in Florida with the price less than $1500"
+    response = agent.run(user_message)
+    print(response)
