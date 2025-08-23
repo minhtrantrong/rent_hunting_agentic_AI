@@ -1,1 +1,1 @@
-# rent_hunting_agentic_AI
+# agent_2_numbeo_search
