@@ -2,11 +2,20 @@ import os
 import mysql.connector
 from agno.tools import tool
 from agno.agent import Agent
+from agno.storage.sqlite import SqliteStorage
 from agno.models.google import Gemini
 from dotenv import load_dotenv
 
 # Load environment variables from the .env file
 load_dotenv()
+
+# Store agent sessions in a SQLite database
+# Delete the existing database file if it exists
+if os.path.exists("tmp/agent.db"):
+    os.remove("tmp/agent.db")
+# Create the storage
+storage = SqliteStorage(table_name="agent_sessions", db_file="tmp/agent.db")
+
 
 # The database connection function now reads from the loaded environment variables
 def get_tidb_connection():
@@ -40,7 +49,7 @@ def query_apartments(state: str, price_limit: int) -> str:
             
         output = []
         for row in results:
-            output.append(f"State: {row['state']}, Name: {row['name']}, Address: {row['address']}, Price: {row['price']}, Beds: {row['bed_info']}")
+            output.append(f"State: {row['state']}, Name: {row['name']}, Address: {row['address']}, Price: {row['price']}, Beds: {row['bed_info']}, Contact Info: {row['phone']}")
         
         cursor.close()
         conn.close()
@@ -53,15 +62,38 @@ def query_apartments(state: str, price_limit: int) -> str:
 gemini_model = Gemini(id="gemini-1.5-flash-latest")
 
 agent = Agent(
+    name="Apartment Finder",
     model=gemini_model,
     tools=[query_apartments],
-    description="You are an agent that can find apartments based on user requests.",
-    instructions="You must use the query_apartments tool to find apartments based on the user's criteria for state and price.",
-    show_tool_calls=True
+    description="An agent that helps users find apartments based on their criteria.",
+    instructions=[
+        "You are an expert in finding apartments.",
+        "Use the provided tool to query the database for apartments based on user criteria.",
+        "Always ask for the state and price limit before querying.",
+        "When providing customer data, format it in table.",
+    ],
+    show_tool_calls=True,
+    storage=storage,
+    add_datetime_to_instructions=True,
+    # Add the chat history to the messages
+    add_history_to_messages=True,
+    # Number of history runs
+    num_history_runs=3,
+    markdown=True,
 )
 
-# User message and execution
-user_message = "I would like to find an apartment in Florida with the price less than $1500"
-response = agent.run(user_message)
+if __name__ == "__main__":
 
-print(response)
+    while True:
+        user_input = input("User: ")
+
+        if user_input.lower() == "":
+            print("Exiting...")
+            break
+
+        agent.print_response(
+            message=f"{user_input}", 
+            markdown=True, 
+        )
+    
+    # Sample prompt: "I would like to find an apartment in Florida with the price less than $1500"
