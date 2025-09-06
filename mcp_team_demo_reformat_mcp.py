@@ -25,6 +25,7 @@ import smtplib
 from email.mime.text import MIMEText
 import requests
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 load_dotenv()
 if os.path.exists("tmp/agent.db"):
@@ -175,6 +176,7 @@ def get_tidb_connection():
 # -------------------------
 # TOOLS
 # -------------------------
+demo = MCPTeamDemo()
 
 @tool
 def get_properties() -> List[Dict[str, Any]]:
@@ -230,7 +232,7 @@ def score_property(property: Dict[str, Any], regional_data: Dict[str, Any], user
 
     score = 0.0
     if rent <= budget:
-        score += 30 * (1.5 - (rent / budget))
+        score += max(0, 30 * (1.5 - (rent / budget)))  # tránh âm
 
     score += (property["price_analysis"]["affordability_score"] / 10.0) * 20
     score += min(property["investment_metrics"]["roi_projection"] / 10.0, 1.0) * 15
@@ -247,85 +249,47 @@ def score_property(property: Dict[str, Any], regional_data: Dict[str, Any], user
 
 
 
+
 @tool
 def create_calendar_events(selected_properties: List[Dict[str, Any]], user_email: str) -> Dict[str, Any]:
-    """Schedules viewing events for selected properties using Google Calendar API."""
-    creds = service_account.Credentials.from_service_account_file(
-        os.getenv("GOOGLE_CALENDAR_CREDENTIALS"),
-        scopes=["https://www.googleapis.com/auth/calendar"]
-    )
-    service = build("calendar", "v3", credentials=creds)
-
-    events = []
-    for i, prop in enumerate(selected_properties, 1):
-        event_start = (datetime.utcnow() + timedelta(days=i, hours=10))
-        event_end = event_start + timedelta(hours=1)
-
-        event = {
-            "summary": f"Viewing: {prop['name']}",
-            "location": prop["address"],
-            "description": f"Property viewing scheduled by RentGenius for {user_email}",
-            "start": {"dateTime": event_start.isoformat() + "Z"},
-            "end": {"dateTime": event_end.isoformat() + "Z"},
-            "attendees": [{"email": user_email}],
-        }
-
-        created = service.events().insert(calendarId="primary", body=event).execute()
-        events.append({"event_id": created["id"], "property": prop["name"], "time": created["start"]["dateTime"]})
-
-    return {"events_created": events, "status": "success"}
-
-
+    try:
+        return demo.mcp_client.call(
+            "calendar-server",
+            "create_calendar_events",
+            selected_properties=selected_properties,
+            user_email=user_email
+        )
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
 
 @tool
 def send_coordination_email(user_profile: Dict[str, Any], schedule: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Sends a coordination email with the property viewing schedule via Gmail SMTP."""
-    sender = os.getenv("EMAIL_ADDRESS")
-    password = os.getenv("EMAIL_PASSWORD")
-    receiver = user_profile["email"]
-
-    body = "📅 Property Viewing Schedule:\n\n"
-    for evt in schedule:
-        body += f"- {evt['property']} at {evt['time']}\n"
-
-    msg = MIMEText(body)
-    msg["Subject"] = "Your RentGenius Viewing Schedule"
-    msg["From"] = sender
-    msg["To"] = receiver
-
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(sender, password)
-            server.sendmail(sender, receiver, msg.as_string())
-        return {"status": "sent", "to": receiver, "viewings": schedule}
+        message = "\n".join([f"- {evt.get('property')} at {evt.get('time')}" for evt in schedule])
+        return demo.mcp_client.call(
+            "communication-server",
+            "send_email",
+            to_email=user_profile["email"],
+            subject="Your RentGenius Viewing Schedule",
+            message=message
+        )
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
+
+@tool
+def optimize_route(properties: List[Dict[str, Any]], start_location: str) -> Dict[str, Any]:
+    try:
+        return demo.mcp_client.call(
+            "maps-server",
+            "calculate_travel_time",
+            origin=start_location,
+            destination=properties[-1]["address"]
+        )
     except Exception as e:
         return {"status": "error", "error": str(e)}
 
 
-@tool
-def optimize_route(properties: List[Dict[str, Any]], start_location: str) -> Dict[str, Any]:
-    """Optimizes the route for property viewings using Google Maps Directions API."""
-    api_key = os.getenv("GOOGLE_MAPS_API_KEY")
-    waypoints = "|".join([p["address"] for p in properties])
 
-    url = (
-        f"https://maps.googleapis.com/maps/api/directions/json"
-        f"?origin={start_location}"
-        f"&destination={properties[-1]['address']}"
-        f"&waypoints=optimize:true|{waypoints}"
-        f"&key={api_key}"
-    )
-
-    resp = requests.get(url)
-    data = resp.json()
-
-    if data.get("status") != "OK":
-        return {"status": "error", "error": data.get("status", "Unknown error")}
-
-    order = data["routes"][0]["waypoint_order"]
-    optimized_order = [properties[i]["name"] for i in order]
-
-    return {"status": "success", "optimized_order": optimized_order}
 
 
 # -------------------------
@@ -333,9 +297,6 @@ def optimize_route(properties: List[Dict[str, Any]], start_location: str) -> Dic
 # -------------------------
 async def init_agent():
     gemini_model = Gemini(id="gemini-1.5-flash-latest")
-    await calendar_tools.connect()
-    await maps_tools.connect()
-    await comms_tools.connect()
     agent = Agent(
         name="MCP Apartment Coordinator",
         model=gemini_model,
@@ -344,9 +305,9 @@ async def init_agent():
             get_properties,
             get_regional_data,
             score_property,
-            calendar_tools,       # MCP tool
-            maps_tools,           # MCP tool
-            comms_tools,         # MCP tool
+            create_calendar_events,
+            send_coordination_email,
+            optimize_route,
         ],
         description="Agent that demonstrates Model Context Protocol via tool-augmented reasoning.",
         instructions=[
@@ -363,6 +324,7 @@ async def init_agent():
         num_history_runs=3,
         markdown=True,
     )
+    return agent
 
 
 if __name__ == "__main__":
@@ -379,15 +341,21 @@ if __name__ == "__main__":
     }
 
     async def main():
-        agent = await init_agent()   # khởi tạo agent có MCP tools
-        while True:
-            user_input = input("User: ")
-            if not user_input.strip():
-                print("Exiting...")
-                break
-            agent.print_response(
-                message=f"{user_input}\n\nUser Profile: {user_profile}",
-                markdown=True,
-            )
-
+        agent = await init_agent()
+        try:
+            while True:
+                user_input = input("User: ")
+                if not user_input.strip():
+                    print("Exiting...")
+                    break
+                try:
+                    agent.print_response(
+                        message=f"{user_input}\n\nUser Profile: {user_profile}",
+                        markdown=True,
+                    )
+                except Exception as e:
+                    print(f"❌ Agent error: {e}")
+        finally:
+            if demo and hasattr(demo, "mcp_client"):
+                demo.mcp_client.disconnect()
     asyncio.run(main())
