@@ -1,0 +1,16 @@
+agno
+google-genai
+dotenv
+requests
+bs4
+pandas
+colorama
+unidecode
+selenium
+markdownify
+yfinance
+lancedb
+tantivy 
+sqlalchemy
+pylance
+duckduckgo-search
