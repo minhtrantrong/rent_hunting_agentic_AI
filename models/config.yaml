@@ -1,0 +1,16 @@
+models:
+  gemini:
+    id: "gemini-2.0-flash"
+    temperature: 0.0
+    provider: "google"
+  
+  gemini-pro:
+    id: "gemini-1.5-pro"
+    temperature: 0.3
+    provider: "google"
+  
+  # Future models can be added here
+  # claude:
+  #   id: "claude-3-sonnet"
+  #   temperature: 0.2
+  #   provider: "anthropic"
