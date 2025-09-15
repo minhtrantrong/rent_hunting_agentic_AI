@@ -100,6 +100,11 @@ python app.py
 python test_email_template.py
 ```
 
+### Testing Database Connection
+```bash
+python quick_db_test.py
+```
+
 ### Using MCP Tools
 ```bash
 python -m mcp_tools.cli
@@ -151,6 +156,11 @@ python -m pytest tests/
 For email template testing:
 ```bash
 python test_email_template.py
+```
+
+For database connection testing:
+```bash
+python quick_db_test.py
 ```
 
 ## 🤝 Contributing
