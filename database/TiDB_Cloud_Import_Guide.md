@@ -43,8 +43,8 @@ Before starting the import process, ensure you have:
 5. Wait for the file upload to complete
 
 ### 3.2 Configure Database and Table
-1. **Database Name**: Create or select database (e.g., `hackathon_rent_db`)
-2. **Table Name**: Enter table name (e.g., `rent`)
+1. **Database Name**: Create or select database (e.g., `hackathon_rents_db`)
+2. **Table Name**: Enter table name (e.g., `rents`)
 3. **Import Mode**: Select "Create new table" if table doesn't exist
 
 ## Step 4: Define Table Schema
@@ -96,22 +96,22 @@ Execute these validation checks in the TiDB console:
 
 ```sql
 -- Check total record count
-SELECT COUNT(*) FROM rent;
+SELECT COUNT(*) FROM rents;
 
 -- Verify data distribution by state
 SELECT city, COUNT(*) as property_count 
-FROM rent 
+FROM rents 
 GROUP BY city 
 ORDER BY property_count DESC 
 LIMIT 10;
 
 -- Check price range validity
 SELECT MIN(low_price), MAX(high_price), AVG(low_price) 
-FROM rent 
+FROM rents
 WHERE low_price IS NOT NULL;
 
 -- Sample data review
-SELECT * FROM rent LIMIT 5;
+SELECT * FROM rents LIMIT 5;
 ```
 
 ### 6.3 Data Quality Verification

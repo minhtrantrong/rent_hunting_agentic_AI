@@ -15,7 +15,7 @@ The database is designed to support:
 
 ## Schema Design
 
-### Main Table: `rent`
+### Main Table: `rents`
 
 The core table stores rental property information with the following structure:
 
@@ -23,7 +23,6 @@ The core table stores rental property information with the following structure:
 
 | Column Name | Data Type | Description | Constraints |
 |-------------|-----------|-------------|-------------|
-| `id` | INT | Auto-incrementing primary key | PRIMARY KEY, AUTO_INCREMENT |
 | `city` | VARCHAR(512) | State/City identifier (Note: contains state names, not city names in current data) | NOT NULL, INDEXED |
 | `name` | VARCHAR(512) | Property name or address description | NOT NULL |
 | `address` | VARCHAR(512) | Full property address | NOT NULL |
