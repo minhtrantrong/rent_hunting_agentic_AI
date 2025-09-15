@@ -17,6 +17,8 @@ markdownify
 # Configuration and environment
 python-dotenv
 PyYAML
+sqlalchemy==2.0.43
+google.genai==1.36.0
 
 # Standard library extensions (usually included with Python, but listed for completeness)
 # datetime - built-in

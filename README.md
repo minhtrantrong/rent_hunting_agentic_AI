@@ -78,6 +78,12 @@ TIDB_USER=your_username
 TIDB_PASSWORD=your_password
 TIDB_DATABASE=rent_hunting
 ```
+### Import the prepared data to the TiDB database 'rent_hunting', at the table name 'rents'
+From the TiDB web application, select Data > Import 
+Select 'Upload a local file', then select the 'rents.csv' in the data directory
+Data types: low_price and high_price columns are BIGINT(), others columns are VARCHAR(255)
+Database name: rent_hunting
+Table name: rents
 
 ### City Data Configuration
 Modify `data/country_and_city_urls.yaml` to add or update supported cities and their data sources.
