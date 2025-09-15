@@ -27,7 +27,7 @@ def get_tidb_connection():
 
 def fetch_apartments(city: str, price_limit: int) -> str:
     """
-    Queries the apartments table to find apartments that match the criteria.
+    Queries the rents table to find apartments that match the criteria.
     Args:
         city: The city where the apartment is located.
         price_limit: The maximum price of the apartment.
@@ -37,7 +37,7 @@ def fetch_apartments(city: str, price_limit: int) -> str:
     try:
         conn = get_tidb_connection()
         cursor = conn.cursor(dictionary=True)
-        query = f"SELECT * FROM rent WHERE address LIKE '%{city}%' AND low_price < {price_limit}"
+        query = f"SELECT * FROM rents WHERE address LIKE '%{city}%' AND low_price < {price_limit}"
         cursor.execute(query)
         results = cursor.fetchall()
         
