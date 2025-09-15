@@ -1,0 +1,36 @@
+# Core AI and Agent Framework
+agno
+
+# Database connectivity
+mysql-connector-python
+
+# Web scraping and data processing
+requests
+beautifulsoup4
+pandas
+
+# Terminal colors and text processing
+colorama
+unidecode
+markdownify
+
+# Configuration and environment
+python-dotenv
+PyYAML
+
+# Standard library extensions (usually included with Python, but listed for completeness)
+# datetime - built-in
+# typing - built-in
+# os - built-in
+# sys - built-in
+# json - built-in
+# logging - built-in
+# abc - built-in
+# dataclasses - built-in (Python 3.7+)
+# enum - built-in
+# argparse - built-in
+# smtplib - built-in
+# ssl - built-in
+# email - built-in
+# urllib.parse - built-in
+# re - built-in
