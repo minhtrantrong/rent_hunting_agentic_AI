@@ -42,10 +42,13 @@
             <!-- Action Buttons -->
             <div style="text-align: center; margin: 30px 0;">
                 <div style="margin-bottom: 15px;">
-                    <a href="#" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 12px 30px; border-radius: 25px; font-weight: 600; margin: 0 10px; box-shadow: 0 4px 12px rgba(102,126,234,0.3); transition: transform 0.2s;">📅 {calendar_link}</a>
+                    {calendar_link}
                 </div>
                 <div>
-                    <span style="display: inline-block; background-color: #059669; color: white; text-decoration: none; padding: 12px 30px; border-radius: 25px; font-weight: 600; margin: 0 10px; box-shadow: 0 4px 12px rgba(5,150,105,0.3);">🗺️ {maps_link}</span>
+                    <a href="https://maps.google.com/maps?q={address_of_apartment_encoded}" target="_blank"
+                       style="display: inline-block; background-color: #059669; color: white; text-decoration: none; padding: 12px 30px; border-radius: 25px; font-weight: 600; margin: 0 10px; box-shadow: 0 4px 12px rgba(5,150,105,0.3); transition: transform 0.2s;">
+                        🗺️ View on Google Maps
+                    </a>
                 </div>
             </div>
 

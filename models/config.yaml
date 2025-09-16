@@ -9,8 +9,13 @@ models:
     temperature: 0.3
     provider: "google"
   
-  # Future models can be added here
-  # claude:
-  #   id: "claude-3-sonnet"
-  #   temperature: 0.2
-  #   provider: "anthropic"
+  # OpenAI models
+  openai:
+    id: "gpt-4o"
+    temperature: 0.2
+    provider: "openai"
+
+  gpt-4:
+    id: "gpt-4"
+    temperature: 0.2
+    provider: "openai"

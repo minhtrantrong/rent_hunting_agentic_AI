@@ -80,7 +80,7 @@ class EmailMCPServer(MCPServer):
                     "is_html": {
                         "type": "boolean",
                         "description": "Whether message is HTML formatted",
-                        "default": False
+                        "default": True
                     },
                     "event_title": {
                         "type": "string",
@@ -139,7 +139,7 @@ class EmailMCPServer(MCPServer):
                     "is_html": {
                         "type": "boolean",
                         "description": "Whether message is HTML formatted",
-                        "default": False
+                        "default": True
                     }
                 },
                 "required": ["recipients", "subject", "message"]
@@ -263,7 +263,7 @@ class EmailMCPServer(MCPServer):
             subject = params["subject"]
             message = params["message"]
             from_email = params.get("from_email", self.smtp_config["username"])
-            is_html = params.get("is_html", False)
+            is_html = params.get("is_html", True)
             
             # Extract calendar event parameters
             event_title = params.get("event_title")
@@ -352,7 +352,7 @@ class EmailMCPServer(MCPServer):
             subject = params["subject"]
             message = params["message"]
             from_email = params.get("from_email", self.smtp_config["username"])
-            is_html = params.get("is_html", False)
+            is_html = params.get("is_html", True)
             
             if not self.smtp_config["username"] or not self.smtp_config["password"]:
                 return {
@@ -576,8 +576,9 @@ Sent at: {os.popen('date /t & time /t').read().strip()}""",
             server = smtplib.SMTP(self.smtp_config["smtp_server"], int(self.smtp_config["smtp_port"]))
             
             if self.smtp_config["use_tls"].lower() == "true":
-                # Enable TLS
-                context = ssl.create_default_context()
+                # Enable TLS with proper certificate handling
+                import certifi
+                context = ssl.create_default_context(cafile=certifi.where())
                 server.starttls(context=context)
             
             # Login

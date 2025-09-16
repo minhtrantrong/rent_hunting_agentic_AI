@@ -1,5 +1,6 @@
 from agno.agent import Agent
 from agno.models.google import Gemini
+from agno.models.openai import OpenAIChat
 from dotenv import load_dotenv
 import yaml
 import os
@@ -58,6 +59,8 @@ def load_model_instance(
     # Create model instance based on provider
     if provider == "google":
         model_instance = Gemini(**config)
+    elif provider == "openai":
+        model_instance = OpenAIChat(**config)
     else:
         raise ValueError(f"Provider not implemented: {provider}")
     

@@ -18,6 +18,21 @@ load_dotenv() # Load environment variables
 # Import calendar utilities
 from calendar_utils import generate_all_calendar_links, format_calendar_links_html
 
+# Import enhanced email utilities
+from enhanced_email_utils import (
+    send_enhanced_apartment_listings_email,
+    send_enhanced_apartment_appointment_email,
+    create_enhanced_apartment_listings_email
+)
+
+# Import simplified email tools that work reliably
+from simple_email_tools import (
+    send_beautiful_apartment_email,
+    send_apartment_search_results,
+    schedule_apartment_viewing,
+    search_apartments_by_criteria
+)
+
 # Default email configuration from environment
 DEFAULT_EMAIL = os.getenv("DEFAULT_EMAIL")
 
@@ -272,10 +287,10 @@ def send_apartment_appointment_email(name_of_apartment: str, address_of_apartmen
         return send_email(subject=subject, body=email_content, to_address=to_email)
 
 # Define custom tools that use MCP servers (only if available)
-def send_email_tool(to_email: str = DEFAULT_EMAIL, subject: str = "", message: str = "", 
+def send_email_tool(to_email: str = DEFAULT_EMAIL, subject: str = "", message: str = "",
                    event_title: str = "", event_start: str = "", event_end: str = "",
-                   event_description: str = "", event_location: str = "", 
-                   event_timezone: str = "America/New_York", is_html: bool = False) -> str:
+                   event_description: str = "", event_location: str = "",
+                   event_timezone: str = "America/New_York", is_html: bool = True) -> str:
     """
     Send an email using the email MCP server with optional calendar event links.
     
@@ -289,7 +304,7 @@ def send_email_tool(to_email: str = DEFAULT_EMAIL, subject: str = "", message: s
         event_description (str): Event description (optional)
         event_location (str): Event location (optional)
         event_timezone (str): Event timezone (default: 'America/New_York')
-        is_html (bool): Whether message is HTML formatted (default: False)
+        is_html (bool): Whether message is HTML formatted (default: True)
     
     Returns:
         str: Status of the email sending operation
@@ -452,7 +467,7 @@ def send_gmail_calendar_email_tool(to_email: str = DEFAULT_EMAIL, subject: str =
 # Prepare tools based on MCP availability
 email_tools = []
 if MCP_AVAILABLE:
-    email_tools = [send_email_tool, create_calendar_event_tool, send_email_with_calendar_event_tool, send_gmail_calendar_email_tool, send_apartment_appointment_email]
+    email_tools = [send_apartment_search_results, schedule_apartment_viewing, send_gmail_calendar_email_tool]
 else:
     # Fallback simple email function
     def send_email(subject: str = "", body: str = "", to_address: str = DEFAULT_EMAIL) -> str:
@@ -466,7 +481,7 @@ else:
         """
         return f"Sent email to {to_address} with subject {subject} and body {body}"
     
-    email_tools = [send_email, send_apartment_appointment_email]
+    email_tools = [send_apartment_search_results, schedule_apartment_viewing]
 
 # Create the web agent
 web_agent = Agent(
@@ -489,11 +504,11 @@ apartment_agent = Agent(
     name="Apartment Data Agent",
     role="Analyze and provide list of apartments that match user criteria",
     model=model_instance,
-    tools=[fetch_apartments],
+    tools=[search_apartments_by_criteria],
     instructions=[
         "Query apartment database for relevant property information",
         "Present data in clear, structured tables with key metrics",
-        "Include location details, pricing, and property features",
+        "Include state, name, address, price, bed_info, phone",
     ],
     markdown=True,
 )
@@ -504,14 +519,26 @@ email_agent = Agent(
     model=model_instance,
     tools=email_tools,
     instructions=[
-        f"You are a helpful email and calendar assistant. Current date/time: {current_datetime}",
-        f"Default email recipient (from .env): {DEFAULT_EMAIL}",
-        "Compose and send email notifications based on user interactions",
-        "Ensure all emails are sent to the correct recipients",
-        "Include relevant information and context in each email",
-        "If no email address is specified, use the default email address from environment variables",
-        "You can send emails even when user doesn't explicitly provide an email address",
-        "APARTMENT APPOINTMENTS: Use send_apartment_appointment_email for apartment viewing appointments - it uses a professional template with apartment details, timing, and helpful links."
+        f"You are a proactive email assistant. Current date/time: {current_datetime}",
+        f"Default email recipient: {DEFAULT_EMAIL}",
+        "SEND EMAILS IMMEDIATELY when requested - no delays, no apologies, no asking permission.",
+        "When user asks for apartment listings via email, IMMEDIATELY call send_apartment_search_results.",
+        "",
+        "PRIMARY FUNCTION - send_apartment_search_results:",
+        "- Automatically searches database for ANY city (Houston, Austin, Dallas, Texas City, etc.)",
+        "- Creates beautiful HTML emails with Google Maps integration",
+        "- Parameters: search_location (user's city), budget (user's max rent), recipient_email",
+        "- ALWAYS use the exact city and budget the user specifies",
+        "- Works for any city in the database - not just Texas City",
+        "",
+        "BEHAVIOR:",
+        "- Extract city, budget, and email from user request",
+        "- Call send_apartment_search_results immediately",
+        "- Confirm what was sent after completion",
+        "- Offer additional services like appointment scheduling",
+        "",
+        "NEVER say 'I apologize' or 'I cannot' - just send the email immediately.",
+        "The tool handles everything: database search, HTML formatting, Google Maps, and delivery."
     ] + (
         [
             "You can send emails to any recipient with a subject and message.",
@@ -545,26 +572,26 @@ rent_hunting_team = Team(
         "You are a collaborative team of AI agents specializing in apartment hunting and rental research.",
         "Work systematically to help users find the perfect rental property based on their criteria.",
         "WORKFLOW:",
-        "1. Apartment Agent: Query database for properties matching user criteria (location, budget, bedrooms, etc.)",
-        "2. Web Agent: Supplement with additional market research and neighborhood information",
-        "3. Email Agent: Offer to send property summaries and schedule viewing appointments",
+        "1. Apartment Agent: Search database for properties matching user criteria (location, budget, bedrooms, etc.)",
+        "2. Email Agent: IMMEDIATELY send beautiful apartment listings to user's email using send_apartment_search_results",
+        "3. Web Agent: Supplement with additional market research if needed",
+        "",
+        "IMPORTANT EMAIL BEHAVIOR:",
+        "- When user requests apartment listings via email, IMMEDIATELY send them using send_apartment_search_results",
+        "- Do NOT apologize or ask permission - just send the beautiful apartment listings right away",
+        "- Extract the city, budget, and email from user request and send immediately",
+        "- After sending, confirm what was sent and offer additional services",
         "",
         "COLLABORATION GUIDELINES:",
+        "- Work quickly and efficiently to fulfill user requests",
         "- Share findings between agents to build comprehensive property profiles",
-        "- Cross-reference data to ensure accuracy and completeness",
-        "- Prioritize properties that best match user requirements",
+        "- Prioritize immediate action when user requests email delivery",
         "- Include practical details: pricing, availability, contact information, and location benefits",
         "",
-        "OUTPUT REQUIREMENTS:",
-        "- Present findings in clear, structured format with key property details",
-        "- Include address, rent, bedrooms, bathrooms, amenities, and contact information",
-        "- Provide neighborhood insights and market context when available",
-        "- Offer actionable next steps (viewing appointments, contact methods)",
-        "",
         "EMAIL SERVICES:",
-        "- Proactively offer to email property summaries to user's preferred address",
-        "- Use send_apartment_appointment_email for scheduling property viewings",
-        "- Send follow-up information and market updates when requested",
+        "- Use send_apartment_search_results for apartment listings (takes: search_location, budget, recipient_email)",
+        "- Use schedule_apartment_viewing for scheduling property viewings",
+        "- ALWAYS send emails immediately when requested - no delays or apologies",
         "",
         "Always maintain a helpful, professional tone focused on finding the best rental solutions."
     ],

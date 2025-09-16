@@ -1,0 +1,83 @@
+RENT HUNTING AI - TEST RESULTS
+==================================================
+
+Category: Hyper-Specific
+Prompt: Show me 2-bedroom apartments in Capitol Hill, Seattle under $2500/month with parking
+Success: False
+Response Time: 0.0s
+Output: ...
+Error: Popen.__init__() got an unexpected keyword argument 'timeout'
+------------------------------
+
+Category: Hyper-Specific
+Prompt: Find studio apartments in Fremont, Seattle between $1800-$2200 with laundry in unit
+Success: False
+Response Time: 0.0s
+Output: ...
+Error: Popen.__init__() got an unexpected keyword argument 'timeout'
+------------------------------
+
+Category: Hyper-Specific
+Prompt: Search for 1-bedroom apartments in Ballard, Seattle under $2000 with pet-friendly policies
+Success: False
+Response Time: 0.0s
+Output: ...
+Error: Popen.__init__() got an unexpected keyword argument 'timeout'
+------------------------------
+
+Category: Moderately Specific
+Prompt: I need an apartment in Seattle for around $2000 per month
+Success: False
+Response Time: 0.0s
+Output: ...
+Error: Popen.__init__() got an unexpected keyword argument 'timeout'
+------------------------------
+
+Category: Moderately Specific
+Prompt: Find me a good rental in downtown Seattle with amenities
+Success: False
+Response Time: 0.0s
+Output: ...
+Error: Popen.__init__() got an unexpected keyword argument 'timeout'
+------------------------------
+
+Category: Moderately Specific
+Prompt: Looking for a place in Seattle with good transit access under $2500
+Success: False
+Response Time: 0.0s
+Output: ...
+Error: Popen.__init__() got an unexpected keyword argument 'timeout'
+------------------------------
+
+Category: Vague
+Prompt: Help me find an apartment
+Success: False
+Response Time: 0.0s
+Output: ...
+Error: Popen.__init__() got an unexpected keyword argument 'timeout'
+------------------------------
+
+Category: Vague
+Prompt: I need a place to live in Seattle
+Success: False
+Response Time: 0.0s
+Output: ...
+Error: Popen.__init__() got an unexpected keyword argument 'timeout'
+------------------------------
+
+Category: Vague
+Prompt: What's available for rent?
+Success: False
+Response Time: 0.0s
+Output: ...
+Error: Popen.__init__() got an unexpected keyword argument 'timeout'
+------------------------------
+
+Category: Vague
+Prompt: Find me something good
+Success: False
+Response Time: 0.0s
+Output: ...
+Error: Popen.__init__() got an unexpected keyword argument 'timeout'
+------------------------------
+

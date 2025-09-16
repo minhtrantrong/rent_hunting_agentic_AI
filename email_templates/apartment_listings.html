@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Apartment Search Results</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f7fa; line-height: 1.6;">
+    <div style="max-width: 800px; margin: 0 auto; background-color: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; text-align: center;">
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700;">🏠 Your Apartment Search Results</h1>
+            <p style="margin: 15px 0 0 0; font-size: 18px; opacity: 0.9;">{search_summary}</p>
+        </div>
+
+        <!-- Content -->
+        <div style="padding: 40px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <p style="font-size: 16px; color: #4a5568; margin: 0;">Found <strong style="color: #667eea;">{total_count} apartments</strong> matching your criteria</p>
+            </div>
+
+            <!-- Apartments Grid -->
+            {apartments_html}
+
+            <!-- Next Steps Section -->
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 12px; padding: 30px; margin-top: 40px; color: white;">
+                <h3 style="margin: 0 0 20px 0; font-size: 22px; font-weight: 600;">📞 Next Steps</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 15px;">
+                        <strong>📱 Call Properties</strong><br>
+                        <small>Check current availability</small>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 15px;">
+                        <strong>👀 Schedule Viewings</strong><br>
+                        <small>Visit your top choices</small>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 15px;">
+                        <strong>💰 Ask About Specials</strong><br>
+                        <small>Move-in deals & utilities</small>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 15px;">
+                        <strong>✅ Verify Pricing</strong><br>
+                        <small>Rates may have changed</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #f8fafc; padding: 30px 40px; text-align: center; border-top: 1px solid #e2e8f0;">
+            <p style="margin: 0; color: #64748b; font-size: 16px;">
+                Best of luck with your apartment search!<br>
+                <strong style="color: #2d3748;">🤖 Rent Hunting AI Assistant</strong>
+            </p>
+            <p style="margin: 15px 0 0 0; color: #94a3b8; font-size: 14px;">
+                Need more options or have questions? Simply reply to this email.
+            </p>
+        </div>
+    </div>
+
+    <!-- Mobile Responsive Styles -->
+    <style>
+        @media only screen and (max-width: 768px) {
+            .apartment-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .apartment-card {
+                margin-bottom: 20px !important;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -14,7 +14,7 @@ colorama.init()
 import unidecode
 from markdownify import markdownify as md
 
-def extract_city_data(city_url: str):
+def extract_city_data(city_url: str = ""):
     """Extract the required table from Numbeo"""
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'

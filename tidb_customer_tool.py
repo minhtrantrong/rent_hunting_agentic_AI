@@ -25,9 +25,9 @@ def get_tidb_connection():
         print(f"Error connecting to TiDB: {err}")
         return None
 
-def fetch_apartments(city: str, price_limit: int) -> str:
+def fetch_apartments(city: str = "Texas City", price_limit: int = 2000) -> str:
     """
-    Queries the rents table to find apartments that match the criteria.
+    Queries the apartments table to find apartments that match the criteria.
     Args:
         city: The city where the apartment is located.
         price_limit: The maximum price of the apartment.
